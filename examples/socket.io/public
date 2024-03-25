@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<!-- Welcome to socket.io/public/index.html. Scroll to the beginning of <script> -->
+<html>
+  <head>
+    <title>Example</title>
+  </head>
+  <body>
+    <ul id = "messages"></ul>
+    <form id = "form" action = "">
+      <input type = "text" id = "input" autocomplete = "off" placeholder = "Type a message here!
+        Feel free to use HTML to style!">
+      <input type = "submit" value = "SEND!">
+    </form>
+<!--   Get socket.io with a script import. You can just copy the integrity info and cross-origin.
+    It just makes sure the cdn file is the right one.-->
+      <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
+      
+    
+      <script>
+      /*io is imported with the CDN, so activate it and save it as socket. The socket is basically the client.*/
+      const socket = io();
+      
+      /*Get all of the HTML elements necessary.*/
+      const messages = document.querySelector("#messages");
+      const form = document.querySelector("#form");
+      const input = document.querySelector("#input");
+      
+      /*Add an event to the form to detect submissions.*/
+      form.addEventListener("submit", function(e) {
+        /*Use the event to prevent the page from reloading, at least I think.*/
+        e.preventDefault();
+        
+        /*If input has a message to send on submit,*/
+        if(input.value) {
+          
+          /*This client, whoever is visiting the webpage, will emit an event to the server with the value of input in it.*/
+          socket.emit("chat message", input.value);
+          
+          /*Clear the message out of the entry box.*/
+          input.value = "";
+        } else {
+          
+          /*If the client presses enter without entering a message, send a like.*/
+          socket.emit("chat message", "👍 Like!");
+        }
+      });
+      
+      /*Now that the client has sent a message, please go back to socket.io-explanation/server.js.*/
+        
+      /*Now you're back, when the server sends a chat message to the client, the client makes an HTML element with the
+      msg sent and displays it in a list.*/
+      socket.on("chat message", function(msg) {
+        var item = document.createElement("li");
+        item.innerHTML = msg;
+        messages.appendChild(item);
+      })
+        
+      /*Please go back one last time.*/
+    </script>
+  </body>
+</html>
